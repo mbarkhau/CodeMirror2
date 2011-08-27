@@ -12,7 +12,7 @@ CodeMirror.defineMode('coffeescript', function(conf) {
     var singleOperators = new RegExp("^[\\+\\-\\*/%&|\\^~<>!\?]");
     var singleDelimiters = new RegExp('^[\\(\\)\\[\\]\\{\\}@,:`=;\\.]');
     var doubleOperators = new RegExp("^((\\+\\+)|(\\+\\=)|(\\-\\-)|(\\-\\=)|(\\*\\*)|(\\*\\=)|(\\/\\/)|(\\/\\=)|(==)|(!=)|(<=)|(>=)|(<>)|(<<)|(>>)|(//))");
-    var doubleDelimiters = new RegExp("^((\->)|(\\.\\.)|(\\+=)|(\\-=)|(\\*=)|(%=)|(/=)|(&=)|(\\|=)|(\\^=))");
+    var doubleDelimiters = new RegExp("^((\->)|(\=>)|(\\.\\.)|(\\+=)|(\\-=)|(\\*=)|(%=)|(/=)|(&=)|(\\|=)|(\\^=))");
     var tripleDelimiters = new RegExp("^((\\.\\.\\.)|(//=)|(>>=)|(<<=)|(\\*\\*=))");
     var identifiers = new RegExp("^[_A-Za-z][_A-Za-z0-9]*");
 
@@ -225,7 +225,7 @@ CodeMirror.defineMode('coffeescript', function(conf) {
             }
         }
         
-        // Handle decorators
+        // Handle properties
         if (current === '@') {
             style = state.tokenize(stream, state);
             current = stream.current();
@@ -237,10 +237,10 @@ CodeMirror.defineMode('coffeescript', function(conf) {
         }
         
         // Handle scope changes.
-        if (current === 'pass' || current === 'return') {
+        if (current === 'return') {
             state.dedent += 1;
         }
-        if ((current === '->' &&
+        if (((current === '->' || current === '=>') &&
                   !state.lambda &&
                   state.scopes[0].type == 'coffee' &&
                   stream.peek() === '')
